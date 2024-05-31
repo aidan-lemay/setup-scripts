@@ -1,8 +1,11 @@
 #!/bin/bash
 # shellcheck disable=SC1091,SC2164,SC2034,SC1072,SC1073,SC1009
 
-# Secure OpenVPN server installer for Debian, Ubuntu, CentOS, Amazon Linux 2, Fedora, Oracle Linux 8, Arch Linux, Rocky Linux and AlmaLinux.
-# https://github.com/angristan/openvpn-install
+# Originally provided by https://github.com/angristan/openvpn-install
+# Modified by Aidan LeMay, https://github.com/aidan-lemay/setup-scripts
+# This modified version of the script creates VPN clients under the 192.168.31.0 subnet
+# As well as adding an option to see the current client list
+# The client creation places its files inside the ~/openvpn/ folder, instead of directly inside your home directory, for further organization
 
 function isRoot() {
 	if [ "$EUID" -ne 0 ]; then
@@ -1302,6 +1305,19 @@ function removeOpenVPN() {
 	fi
 }
 
+function listClient() {
+	NUMBEROFCLIENTS=$(tail -n +2 /etc/openvpn/easy-rsa/pki/index.txt | grep -c "^V")
+	if [[ $NUMBEROFCLIENTS == '0' ]]; then
+		echo ""
+		echo "You have no existing clients!"
+		exit 1
+	fi
+
+	echo ""
+	echo "Existing Client Certifications:"
+	tail -n +2 /etc/openvpn/easy-rsa/pki/index.txt | grep "^V" | cut -d '=' -f 2 | nl -s ') '
+}
+
 function manageMenu() {
 	echo "Welcome to OpenVPN-install!"
 	echo "The git repository is available at: https://github.com/angristan/openvpn-install"
@@ -1309,25 +1325,29 @@ function manageMenu() {
 	echo "It looks like OpenVPN is already installed."
 	echo ""
 	echo "What do you want to do?"
-	echo "   1) Add a new user"
-	echo "   2) Revoke existing user"
-	echo "   3) Remove OpenVPN"
-	echo "   4) Exit"
+	echo "   1) See existing users"
+	echo "   2) Add a new user"
+	echo "   3) Revoke existing user"
+	echo "   4) Remove OpenVPN"
+	echo "   5) Exit"
 	until [[ $MENU_OPTION =~ ^[1-4]$ ]]; do
-		read -rp "Select an option [1-4]: " MENU_OPTION
+		read -rp "Select an option [1-5]: " MENU_OPTION
 	done
 
 	case $MENU_OPTION in
 	1)
-		newClient
+		listClient
 		;;
 	2)
-		revokeClient
+		newClient
 		;;
 	3)
-		removeOpenVPN
+		revokeClient
 		;;
 	4)
+		removeOpenVPN
+		;;
+	5)
 		exit 0
 		;;
 	esac
