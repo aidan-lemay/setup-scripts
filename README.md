@@ -9,3 +9,7 @@
 #### Configuration
 - Output files are written to `~/openvpn/`
 - Server configuration is written to `/etc/openvpn/server.conf`
+
+#### Control
+- Restart the openvpn server after changes to configurations with `sudo systemctl restart openvpn@server`
+- Check openvpn server logs with `sudo systemctl status openvpn@server`
