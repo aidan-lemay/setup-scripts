@@ -159,3 +159,4 @@ for record in "${dns_records[@]}"; do
 
   echo "==> Success!"
   echo "==> $record DNS Record updated to: $ip, ttl: $ttl, proxied: $proxied"
+done
