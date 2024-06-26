@@ -1,5 +1,11 @@
 # Aidan's Setup Scripts for his (and your?) servers
 
+### DDNS
+
+- Copy folder contents to ~/ddns/
+- Add your zone ID, API key, and url to `cfddns.conf`
+- Add `0 8 * * * /path/to/ddns/ddns` to `crontab-e`
+
 ### OpenVPN
 
 - Download the configuration with `curl -O https://raw.githubusercontent.com/aidan-lemay/setup-scripts/main/openvpn.sh`
