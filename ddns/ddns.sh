@@ -59,7 +59,7 @@ is_proxed=$(echo ${dns_record_info} | grep -o '"proxied":[^,]*' | grep -o '[^:]*
 dns_record_ip=$(echo ${dns_record_info} | grep -o '"content":"[^"]*' | cut -d'"' -f 4)
 
 # Check if ip or proxy have changed
-if [ ${dns_record_ip} == ${ip} ] && [ ${is_proxed} == ${proxied} ]; then
+if [ ${dns_record_ip} == ${ip} ]; then
     echo "==> DNS record IP of ${dns_record} is ${dns_record_ip}", no changes needed.
     exit 0
 fi
